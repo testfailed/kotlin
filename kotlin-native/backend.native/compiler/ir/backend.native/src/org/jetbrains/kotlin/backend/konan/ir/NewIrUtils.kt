@@ -120,6 +120,8 @@ private fun IrClass.getOverridingOf(function: IrFunction) = (function as? IrSimp
     it.allOverriddenFunctions.atMostOne { it.parent == this }
 }
 
+internal fun IrClass.needsOuterThisField() = isInner && getSuperClassNotAny()?.isInner != true
+
 val ModuleDescriptor.konanLibrary get() = (this.klibModuleOrigin as? DeserializedKlibModuleOrigin)?.library
 val IrModuleFragment.konanLibrary get() =
     (this as? KonanIrModuleFragmentImpl)?.konanLibrary ?: descriptor.konanLibrary

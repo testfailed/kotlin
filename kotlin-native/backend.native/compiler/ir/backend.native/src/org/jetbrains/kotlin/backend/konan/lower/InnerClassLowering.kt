@@ -9,6 +9,7 @@ import org.jetbrains.kotlin.backend.common.ClassLoweringPass
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.backend.common.lower.callsSuper
 import org.jetbrains.kotlin.backend.konan.Context
+import org.jetbrains.kotlin.backend.konan.ir.needsOuterThisField
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.IrBlockBody
@@ -119,26 +120,19 @@ internal class InnerClassLowering(val context: Context) : ClassLoweringPass {
         InnerClassTransformer(irClass).lowerInnerClass()
     }
 
-    companion object {
-        fun addOuterThisField(declarations: MutableList<IrDeclaration>, irClass: IrClass, context: Context): IrField {
-            val outerThisField = context.specialDeclarationsFactory.getOuterThisField(irClass)
-            declarations += outerThisField
-            return outerThisField
-        }
-    }
-
     private inner class InnerClassTransformer(val irClass: IrClass) {
         lateinit var outerThisFieldSymbol: IrFieldSymbol
 
         fun lowerInnerClass() {
-            if (!irClass.isInner) return
+            if (!irClass.needsOuterThisField()) return
 
             createOuterThisField()
             lowerConstructors()
         }
 
         private fun createOuterThisField() {
-            val outerThisField = addOuterThisField(irClass.declarations, irClass, context)
+            val outerThisField = context.specialDeclarationsFactory.getOuterThisField(irClass)
+            irClass.declarations += outerThisField
             outerThisFieldSymbol = outerThisField.symbol
         }
 
