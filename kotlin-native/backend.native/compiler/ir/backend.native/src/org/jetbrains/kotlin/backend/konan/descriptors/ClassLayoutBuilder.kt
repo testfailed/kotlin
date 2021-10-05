@@ -394,7 +394,7 @@ internal class ClassLayoutBuilder(val irClass: IrClass, val context: Context, va
         return context.getLayoutBuilder(superFunction.parentAsClass).itablePlace(superFunction)
     }
 
-    class FieldInfo(val name: String, val type: IrType, val isConst: Boolean, val hasConstInitializer: Boolean, val irField: IrField?) {
+    class FieldInfo(val name: String, val type: IrType, val isConst: Boolean, val irField: IrField?) {
         var index = -1
     }
 
@@ -458,10 +458,11 @@ internal class ClassLayoutBuilder(val irClass: IrClass, val context: Context, va
 
     lateinit var hierarchyInfo: ClassGlobalHierarchyInfo
 
-    private fun IrField.toFieldInfo() =
-            FieldInfo(name.asString(), type,
-                    correspondingPropertySymbol?.owner?.isConst ?: false,
-                    initializer?.expression is IrConst<*>, this)
+    private fun IrField.toFieldInfo(): FieldInfo {
+        val isConst = correspondingPropertySymbol?.owner?.isConst ?: false
+        require(!isConst || initializer?.expression is IrConst<*>) { "A const val field ${render()} must have constant initializer" }
+        return FieldInfo(name.asString(), type, isConst, this)
+    }
 
     /**
      * Fields declared in the class.

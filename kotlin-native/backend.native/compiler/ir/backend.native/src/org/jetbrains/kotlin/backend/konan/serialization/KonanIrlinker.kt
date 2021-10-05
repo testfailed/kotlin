@@ -159,7 +159,6 @@ internal object InlineFunctionBodyReferenceSerializer {
 class SerializedClassFieldInfo(val name: Int, val binaryType: Int, val type: Int, val flags: Int) {
     companion object {
         const val FLAG_IS_CONST = 1
-        const val FLAG_CONST_INITIALIZER = 2
     }
 }
 
@@ -549,8 +548,6 @@ internal class KonanIrLinker(
                             var flags = 0
                             if (field.isConst)
                                 flags = flags or SerializedClassFieldInfo.FLAG_IS_CONST
-                            if (field.hasConstInitializer)
-                                flags = flags or SerializedClassFieldInfo.FLAG_CONST_INITIALIZER
                             val classifier = irField.type.classifierOrNull
                                     ?: error("Fields of type ${irField.type.render()} are not supported")
                             val primitiveBinaryType = irField.type.computePrimitiveBinaryTypeOrNull()
@@ -831,9 +828,8 @@ internal class KonanIrLinker(
                         "An inner class ${irClass.render()} doesn't need its own <outer this> field (inherits it from super)"
                     }
                     require(outerThisField != null) { "For an inner class ${irClass.render()} there should be <outer this> field" }
-                    ClassLayoutBuilder.FieldInfo(
-                            outerThisField.name.asString(), declarationDeserializer.deserializeIrType(field.type),
-                            isConst = false, hasConstInitializer = false, outerThisField)
+                    val fieldType = declarationDeserializer.deserializeIrType(field.type)
+                    ClassLayoutBuilder.FieldInfo(outerThisField.name.asString(), fieldType, isConst = false, outerThisField)
                 } else {
                     val name = fileDeserializationInfo.fileReader.string(field.name)
                     val type = when {
@@ -853,10 +849,7 @@ internal class KonanIrLinker(
                         }
                     }
                     ClassLayoutBuilder.FieldInfo(
-                            name, type,
-                            isConst = (field.flags and SerializedClassFieldInfo.FLAG_IS_CONST) != 0,
-                            hasConstInitializer = (field.flags and SerializedClassFieldInfo.FLAG_CONST_INITIALIZER) != 0,
-                            irField = null)
+                            name, type, isConst = (field.flags and SerializedClassFieldInfo.FLAG_IS_CONST) != 0, irField = null)
                 }
             }
         }
