@@ -15,6 +15,7 @@ import org.jetbrains.kotlin.analysis.api.fir.AbstractFirReferenceResolveTest
 import org.jetbrains.kotlin.analysis.api.fir.components.*
 import org.jetbrains.kotlin.analysis.api.fir.scopes.AbstractFirDelegateMemberScopeTest
 import org.jetbrains.kotlin.analysis.api.fir.scopes.AbstractFirFileScopeTest
+import org.jetbrains.kotlin.analysis.api.fir.scopes.AbstractFirMemberScopeByCaretTest
 import org.jetbrains.kotlin.analysis.api.fir.scopes.AbstractFirMemberScopeByFqNameTest
 import org.jetbrains.kotlin.analysis.api.fir.symbols.AbstractFirSymbolByFqNameTest
 import org.jetbrains.kotlin.analysis.api.fir.symbols.AbstractFirSymbolByPsiTest
@@ -42,6 +43,10 @@ fun main(args: Array<String>) {
         testGroup("analysis/analysis-api-fir/tests", "analysis/analysis-api/testData") {
             testClass<AbstractFirResolveCallTest> {
                 model("analysisSession/resolveCall")
+            }
+
+            testClass<AbstractFirMemberScopeByCaretTest> {
+                model("scopes/memberScopeByCaret")
             }
 
             testClass<AbstractFirMemberScopeByFqNameTest> {

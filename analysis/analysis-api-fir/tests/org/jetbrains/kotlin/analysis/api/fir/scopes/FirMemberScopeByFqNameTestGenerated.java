@@ -25,6 +25,66 @@ public class FirMemberScopeByFqNameTestGenerated extends AbstractFirMemberScopeB
     }
 
     @Test
+    @TestMetadata("ClassWithGenericBase1.kt")
+    public void testClassWithGenericBase1() throws Exception {
+        runTest("analysis/analysis-api/testData/scopes/memberScopeByFqName/ClassWithGenericBase1.kt");
+    }
+
+    @Test
+    @TestMetadata("ClassWithGenericBase2.kt")
+    public void testClassWithGenericBase2() throws Exception {
+        runTest("analysis/analysis-api/testData/scopes/memberScopeByFqName/ClassWithGenericBase2.kt");
+    }
+
+    @Test
+    @TestMetadata("ClassWithGenericBase3.kt")
+    public void testClassWithGenericBase3() throws Exception {
+        runTest("analysis/analysis-api/testData/scopes/memberScopeByFqName/ClassWithGenericBase3.kt");
+    }
+
+    @Test
+    @TestMetadata("ClassWithGenericBase4.kt")
+    public void testClassWithGenericBase4() throws Exception {
+        runTest("analysis/analysis-api/testData/scopes/memberScopeByFqName/ClassWithGenericBase4.kt");
+    }
+
+    @Test
+    @TestMetadata("GenericFromOuterClassInInnerClass1.kt")
+    public void testGenericFromOuterClassInInnerClass1() throws Exception {
+        runTest("analysis/analysis-api/testData/scopes/memberScopeByFqName/GenericFromOuterClassInInnerClass1.kt");
+    }
+
+    @Test
+    @TestMetadata("GenericFromOuterClassInInnerClass2.kt")
+    public void testGenericFromOuterClassInInnerClass2() throws Exception {
+        runTest("analysis/analysis-api/testData/scopes/memberScopeByFqName/GenericFromOuterClassInInnerClass2.kt");
+    }
+
+    @Test
+    @TestMetadata("GenericFromOuterClassInInnerClassInInheritor1.kt")
+    public void testGenericFromOuterClassInInnerClassInInheritor1() throws Exception {
+        runTest("analysis/analysis-api/testData/scopes/memberScopeByFqName/GenericFromOuterClassInInnerClassInInheritor1.kt");
+    }
+
+    @Test
+    @TestMetadata("GenericFromOuterClassInInnerClassInInheritor2.kt")
+    public void testGenericFromOuterClassInInnerClassInInheritor2() throws Exception {
+        runTest("analysis/analysis-api/testData/scopes/memberScopeByFqName/GenericFromOuterClassInInnerClassInInheritor2.kt");
+    }
+
+    @Test
+    @TestMetadata("GenericFromOuterClassInInnerClassInInheritor3.kt")
+    public void testGenericFromOuterClassInInnerClassInInheritor3() throws Exception {
+        runTest("analysis/analysis-api/testData/scopes/memberScopeByFqName/GenericFromOuterClassInInnerClassInInheritor3.kt");
+    }
+
+    @Test
+    @TestMetadata("Implement_java_util_Collection.kt")
+    public void testImplement_java_util_Collection() throws Exception {
+        runTest("analysis/analysis-api/testData/scopes/memberScopeByFqName/Implement_java_util_Collection.kt");
+    }
+
+    @Test
     @TestMetadata("Int.kt")
     public void testInt() throws Exception {
         runTest("analysis/analysis-api/testData/scopes/memberScopeByFqName/Int.kt");

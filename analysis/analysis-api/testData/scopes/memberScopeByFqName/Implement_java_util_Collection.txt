@@ -1,0 +1,436 @@
+KtFunctionSymbol:
+  annotatedType: [] kotlin/Int
+  annotationClassIds: []
+  annotations: []
+  callableIdIfNonLocal: java/util/Collection.size
+  hasStableParameterNames: false
+  isExtension: false
+  isExternal: false
+  isInfix: false
+  isInline: false
+  isOperator: false
+  isOverride: false
+  isStatic: false
+  isSuspend: false
+  modality: ABSTRACT
+  name: size
+  origin: JAVA
+  receiverType: null
+  symbolKind: CLASS_MEMBER
+  typeParameters: []
+  valueParameters: []
+  visibility: Public
+  getDispatchReceiver(): java/util/Collection<E>
+  deprecationStatus: null
+
+KtFunctionSymbol:
+  annotatedType: [] kotlin/Boolean
+  annotationClassIds: []
+  annotations: []
+  callableIdIfNonLocal: java/util/Collection.isEmpty
+  hasStableParameterNames: false
+  isExtension: false
+  isExternal: false
+  isInfix: false
+  isInline: false
+  isOperator: false
+  isOverride: false
+  isStatic: false
+  isSuspend: false
+  modality: ABSTRACT
+  name: isEmpty
+  origin: JAVA
+  receiverType: null
+  symbolKind: CLASS_MEMBER
+  typeParameters: []
+  valueParameters: []
+  visibility: Public
+  getDispatchReceiver(): java/util/Collection<E>
+  deprecationStatus: null
+
+KtFunctionSymbol:
+  annotatedType: [] kotlin/Boolean
+  annotationClassIds: []
+  annotations: []
+  callableIdIfNonLocal: java/util/Collection.contains
+  hasStableParameterNames: false
+  isExtension: false
+  isExternal: false
+  isInfix: false
+  isInline: false
+  isOperator: true
+  isOverride: false
+  isStatic: false
+  isSuspend: false
+  modality: ABSTRACT
+  name: contains
+  origin: JAVA
+  receiverType: null
+  symbolKind: CLASS_MEMBER
+  typeParameters: []
+  valueParameters: [
+    KtValueParameterSymbol(p0)
+  ]
+  visibility: Public
+  getDispatchReceiver(): java/util/Collection<E>
+  deprecationStatus: null
+
+KtFunctionSymbol:
+  annotatedType: [] @EnhancedNullability kotlin/collections/MutableIterator<ft<test/SomeClass, test/SomeClass?>>
+  annotationClassIds: []
+  annotations: []
+  callableIdIfNonLocal: test/MyList.iterator
+  hasStableParameterNames: false
+  isExtension: false
+  isExternal: false
+  isInfix: false
+  isInline: false
+  isOperator: true
+  isOverride: false
+  isStatic: false
+  isSuspend: false
+  modality: ABSTRACT
+  name: iterator
+  origin: JAVA
+  receiverType: null
+  symbolKind: CLASS_MEMBER
+  typeParameters: []
+  valueParameters: []
+  visibility: Public
+  getDispatchReceiver(): test/MyList
+  deprecationStatus: null
+
+KtFunctionSymbol:
+  annotatedType: [] ft<kotlin/Array<ft<kotlin/Any, kotlin/Any?>>, kotlin/Array<out ft<kotlin/Any, kotlin/Any?>>?>
+  annotationClassIds: []
+  annotations: []
+  callableIdIfNonLocal: java/util/Collection.toArray
+  hasStableParameterNames: false
+  isExtension: false
+  isExternal: false
+  isInfix: false
+  isInline: false
+  isOperator: false
+  isOverride: false
+  isStatic: false
+  isSuspend: false
+  modality: ABSTRACT
+  name: toArray
+  origin: JAVA
+  receiverType: null
+  symbolKind: CLASS_MEMBER
+  typeParameters: []
+  valueParameters: []
+  visibility: Public
+  getDispatchReceiver(): java/util/Collection<E>
+  deprecationStatus: null
+
+KtFunctionSymbol:
+  annotatedType: [] ft<kotlin/Array<ft<T, T?>>, kotlin/Array<out ft<T, T?>>?>
+  annotationClassIds: []
+  annotations: []
+  callableIdIfNonLocal: java/util/Collection.toArray
+  hasStableParameterNames: false
+  isExtension: false
+  isExternal: false
+  isInfix: false
+  isInline: false
+  isOperator: false
+  isOverride: false
+  isStatic: false
+  isSuspend: false
+  modality: ABSTRACT
+  name: toArray
+  origin: JAVA
+  receiverType: null
+  symbolKind: CLASS_MEMBER
+  typeParameters: [
+    KtTypeParameterSymbol(T)
+  ]
+  valueParameters: [
+    KtValueParameterSymbol(p0)
+  ]
+  visibility: Public
+  getDispatchReceiver(): java/util/Collection<E>
+  deprecationStatus: null
+
+KtFunctionSymbol:
+  annotatedType: [] kotlin/Boolean
+  annotationClassIds: []
+  annotations: []
+  callableIdIfNonLocal: test/MyList.add
+  hasStableParameterNames: false
+  isExtension: false
+  isExternal: false
+  isInfix: false
+  isInline: false
+  isOperator: false
+  isOverride: false
+  isStatic: false
+  isSuspend: false
+  modality: ABSTRACT
+  name: add
+  origin: JAVA
+  receiverType: null
+  symbolKind: CLASS_MEMBER
+  typeParameters: []
+  valueParameters: [
+    KtValueParameterSymbol(p0)
+  ]
+  visibility: Public
+  getDispatchReceiver(): test/MyList
+  deprecationStatus: null
+
+KtFunctionSymbol:
+  annotatedType: [] kotlin/Boolean
+  annotationClassIds: []
+  annotations: []
+  callableIdIfNonLocal: java/util/Collection.remove
+  hasStableParameterNames: false
+  isExtension: false
+  isExternal: false
+  isInfix: false
+  isInline: false
+  isOperator: false
+  isOverride: false
+  isStatic: false
+  isSuspend: false
+  modality: ABSTRACT
+  name: remove
+  origin: JAVA
+  receiverType: null
+  symbolKind: CLASS_MEMBER
+  typeParameters: []
+  valueParameters: [
+    KtValueParameterSymbol(p0)
+  ]
+  visibility: Public
+  getDispatchReceiver(): java/util/Collection<E>
+  deprecationStatus: null
+
+KtFunctionSymbol:
+  annotatedType: [] kotlin/Boolean
+  annotationClassIds: []
+  annotations: []
+  callableIdIfNonLocal: java/util/Collection.containsAll
+  hasStableParameterNames: false
+  isExtension: false
+  isExternal: false
+  isInfix: false
+  isInline: false
+  isOperator: false
+  isOverride: false
+  isStatic: false
+  isSuspend: false
+  modality: ABSTRACT
+  name: containsAll
+  origin: JAVA
+  receiverType: null
+  symbolKind: CLASS_MEMBER
+  typeParameters: []
+  valueParameters: [
+    KtValueParameterSymbol(p0)
+  ]
+  visibility: Public
+  getDispatchReceiver(): java/util/Collection<E>
+  deprecationStatus: null
+
+KtFunctionSymbol:
+  annotatedType: [] kotlin/Boolean
+  annotationClassIds: []
+  annotations: []
+  callableIdIfNonLocal: test/MyList.addAll
+  hasStableParameterNames: false
+  isExtension: false
+  isExternal: false
+  isInfix: false
+  isInline: false
+  isOperator: false
+  isOverride: false
+  isStatic: false
+  isSuspend: false
+  modality: ABSTRACT
+  name: addAll
+  origin: JAVA
+  receiverType: null
+  symbolKind: CLASS_MEMBER
+  typeParameters: []
+  valueParameters: [
+    KtValueParameterSymbol(p0)
+  ]
+  visibility: Public
+  getDispatchReceiver(): test/MyList
+  deprecationStatus: null
+
+KtFunctionSymbol:
+  annotatedType: [] kotlin/Boolean
+  annotationClassIds: []
+  annotations: []
+  callableIdIfNonLocal: java/util/Collection.removeAll
+  hasStableParameterNames: false
+  isExtension: false
+  isExternal: false
+  isInfix: false
+  isInline: false
+  isOperator: false
+  isOverride: false
+  isStatic: false
+  isSuspend: false
+  modality: ABSTRACT
+  name: removeAll
+  origin: JAVA
+  receiverType: null
+  symbolKind: CLASS_MEMBER
+  typeParameters: []
+  valueParameters: [
+    KtValueParameterSymbol(p0)
+  ]
+  visibility: Public
+  getDispatchReceiver(): java/util/Collection<E>
+  deprecationStatus: null
+
+KtFunctionSymbol:
+  annotatedType: [] kotlin/Boolean
+  annotationClassIds: []
+  annotations: []
+  callableIdIfNonLocal: java/util/Collection.retainAll
+  hasStableParameterNames: false
+  isExtension: false
+  isExternal: false
+  isInfix: false
+  isInline: false
+  isOperator: false
+  isOverride: false
+  isStatic: false
+  isSuspend: false
+  modality: ABSTRACT
+  name: retainAll
+  origin: JAVA
+  receiverType: null
+  symbolKind: CLASS_MEMBER
+  typeParameters: []
+  valueParameters: [
+    KtValueParameterSymbol(p0)
+  ]
+  visibility: Public
+  getDispatchReceiver(): java/util/Collection<E>
+  deprecationStatus: null
+
+KtFunctionSymbol:
+  annotatedType: [] kotlin/Unit
+  annotationClassIds: []
+  annotations: []
+  callableIdIfNonLocal: java/util/Collection.clear
+  hasStableParameterNames: false
+  isExtension: false
+  isExternal: false
+  isInfix: false
+  isInline: false
+  isOperator: false
+  isOverride: false
+  isStatic: false
+  isSuspend: false
+  modality: ABSTRACT
+  name: clear
+  origin: JAVA
+  receiverType: null
+  symbolKind: CLASS_MEMBER
+  typeParameters: []
+  valueParameters: []
+  visibility: Public
+  getDispatchReceiver(): java/util/Collection<E>
+  deprecationStatus: null
+
+KtFunctionSymbol:
+  annotatedType: [] kotlin/Boolean
+  annotationClassIds: []
+  annotations: []
+  callableIdIfNonLocal: kotlin/Any.equals
+  hasStableParameterNames: true
+  isExtension: false
+  isExternal: false
+  isInfix: false
+  isInline: false
+  isOperator: true
+  isOverride: false
+  isStatic: false
+  isSuspend: false
+  modality: OPEN
+  name: equals
+  origin: LIBRARY
+  receiverType: null
+  symbolKind: CLASS_MEMBER
+  typeParameters: []
+  valueParameters: [
+    KtValueParameterSymbol(other)
+  ]
+  visibility: Public
+  getDispatchReceiver(): kotlin/Any
+  deprecationStatus: null
+
+KtFunctionSymbol:
+  annotatedType: [] kotlin/Int
+  annotationClassIds: []
+  annotations: []
+  callableIdIfNonLocal: kotlin/Any.hashCode
+  hasStableParameterNames: true
+  isExtension: false
+  isExternal: false
+  isInfix: false
+  isInline: false
+  isOperator: false
+  isOverride: false
+  isStatic: false
+  isSuspend: false
+  modality: OPEN
+  name: hashCode
+  origin: LIBRARY
+  receiverType: null
+  symbolKind: CLASS_MEMBER
+  typeParameters: []
+  valueParameters: []
+  visibility: Public
+  getDispatchReceiver(): kotlin/Any
+  deprecationStatus: null
+
+KtFunctionSymbol:
+  annotatedType: [] kotlin/String
+  annotationClassIds: []
+  annotations: []
+  callableIdIfNonLocal: kotlin/Any.toString
+  hasStableParameterNames: true
+  isExtension: false
+  isExternal: false
+  isInfix: false
+  isInline: false
+  isOperator: false
+  isOverride: false
+  isStatic: false
+  isSuspend: false
+  modality: OPEN
+  name: toString
+  origin: LIBRARY
+  receiverType: null
+  symbolKind: CLASS_MEMBER
+  typeParameters: []
+  valueParameters: []
+  visibility: Public
+  getDispatchReceiver(): kotlin/Any
+  deprecationStatus: null
+
+KtConstructorSymbol:
+  annotatedType: [] test/MyList
+  annotationClassIds: []
+  annotations: []
+  callableIdIfNonLocal: null
+  containingClassIdIfNonLocal: test/MyList
+  hasStableParameterNames: true
+  isExtension: false
+  isPrimary: true
+  origin: SOURCE_MEMBER_GENERATED
+  receiverType: null
+  symbolKind: CLASS_MEMBER
+  typeParameters: []
+  valueParameters: []
+  visibility: Public
+  deprecationStatus: null
