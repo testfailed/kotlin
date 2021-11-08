@@ -37,9 +37,6 @@ class FirDelegatedMemberScope(
     private val dispatchReceiverType = containingClass.defaultType()
     private val overrideChecker = FirStandardOverrideChecker(session)
 
-    private val delegatedFunctionsCache = hashMapOf<FirNamedFunctionSymbol, FirNamedFunctionSymbol>()
-    private val delegatedPropertiesCache = hashMapOf<FirPropertySymbol, FirPropertySymbol>()
-
     override fun processFunctionsByName(name: Name, processor: (FirNamedFunctionSymbol) -> Unit) {
         declaredMemberScope.processFunctionsByName(name, processor)
         val result = mutableListOf<FirNamedFunctionSymbol>()
@@ -88,7 +85,8 @@ class FirDelegatedMemberScope(
                 it.fir.multipleDelegatesWithTheSameSignature = true
                 return@processor
             }
-            val delegatedSymbol = delegatedFunctionsCache.getOrPut(functionSymbol) {
+
+            val delegatedSymbol =
                 FirFakeOverrideGenerator.createCopyForFirFunction(
                     FirNamedFunctionSymbol(
                         functionSymbol.callableId,
@@ -101,7 +99,6 @@ class FirDelegatedMemberScope(
                 ).apply {
                     delegatedWrapperData = DelegatedWrapperData(functionSymbol.fir, containingClass.symbol.toLookupTag(), delegateField)
                 }.symbol
-            }
 
             result += delegatedSymbol
         }
@@ -137,6 +134,7 @@ class FirDelegatedMemberScope(
             if (propertySymbol !is FirPropertySymbol) {
                 return@processor
             }
+
             val original = propertySymbol.fir
 
             if (original.modality == Modality.FINAL || original.visibility == Visibilities.Private) {
@@ -156,7 +154,8 @@ class FirDelegatedMemberScope(
                 it.fir.multipleDelegatesWithTheSameSignature = true
                 return@processor
             }
-            val delegatedSymbol = delegatedPropertiesCache.getOrPut(propertySymbol) {
+
+            val delegatedSymbol =
                 FirFakeOverrideGenerator.createCopyForFirProperty(
                     FirPropertySymbol(
                         propertySymbol.callableId
@@ -169,7 +168,6 @@ class FirDelegatedMemberScope(
                 ).apply {
                     delegatedWrapperData = DelegatedWrapperData(propertySymbol.fir, containingClass.symbol.toLookupTag(), delegateField)
                 }.symbol
-            }
             result += delegatedSymbol
         }
     }
@@ -215,7 +213,6 @@ class DelegatedWrapperData<D : FirCallableDeclaration>(
     val containingClass: ConeClassLikeLookupTag,
     val delegateField: FirField,
 )
-
 var <D : FirCallableDeclaration>
         D.delegatedWrapperData: DelegatedWrapperData<D>? by FirDeclarationDataRegistry.data(DelegatedWrapperDataKey)
 
