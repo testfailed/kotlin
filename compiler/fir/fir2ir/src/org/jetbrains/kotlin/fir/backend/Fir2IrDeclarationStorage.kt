@@ -411,7 +411,7 @@ class Fir2IrDeclarationStorage(
     fun getCachedIrFunction(
         function: FirSimpleFunction,
         dispatchReceiverLookupTag: ConeClassLikeLookupTag?,
-        signatureCalculator: (FirSimpleFunction) -> IdSignature?
+        signatureCalculator: () -> IdSignature?
     ): IrSimpleFunction? {
         return if (function.visibility == Visibilities.Local) {
             localStorage.getLocalFunction(function)
@@ -420,7 +420,7 @@ class Fir2IrDeclarationStorage(
                     dispatchReceiverLookupTag !is ConeClassLookupTagWithFixedSymbol &&
                     dispatchReceiverLookupTag != function.containingClass()
             val cached = if (isFakeOverride) null else functionCache[function]
-            cached ?: signatureCalculator(function)?.let { signature ->
+            cached ?: signatureCalculator()?.let { signature ->
                 symbolTable.referenceSimpleFunctionIfAny(signature)?.let { irFunctionSymbol ->
                     val irFunction = irFunctionSymbol.owner
                     if (!isFakeOverride) {
@@ -549,9 +549,9 @@ class Fir2IrDeclarationStorage(
 
     fun getCachedIrConstructor(
         constructor: FirConstructor,
-        signatureCalculator: (FirConstructor) -> IdSignature? = { null }
+        signatureCalculator: () -> IdSignature? = { null }
     ): IrConstructor? {
-        return constructorCache[constructor] ?: signatureCalculator(constructor)?.let { signature ->
+        return constructorCache[constructor] ?: signatureCalculator()?.let { signature ->
             symbolTable.referenceConstructorIfAny(signature)?.let { irConstructorSymbol ->
                 val irConstructor = irConstructorSymbol.owner
                 constructorCache[constructor] = irConstructor
@@ -889,13 +889,13 @@ class Fir2IrDeclarationStorage(
     fun getCachedIrProperty(
         property: FirProperty,
         dispatchReceiverLookupTag: ConeClassLikeLookupTag?,
-        signatureCalculator: (FirProperty) -> IdSignature?
+        signatureCalculator: () -> IdSignature?
     ): IrProperty? {
         val isFakeOverride = dispatchReceiverLookupTag != null &&
                 dispatchReceiverLookupTag !is ConeClassLookupTagWithFixedSymbol &&
                 dispatchReceiverLookupTag != property.containingClass()
         val cached = if (isFakeOverride) null else propertyCache[property]
-        return cached ?: signatureCalculator(property)?.let { signature ->
+        return cached ?: signatureCalculator()?.let { signature ->
             symbolTable.referencePropertyIfAny(signature)?.let { irPropertySymbol ->
                 val irProperty = irPropertySymbol.owner
                 if (!isFakeOverride) {
@@ -1269,9 +1269,9 @@ class Fir2IrDeclarationStorage(
             > getIrCallableSymbol(
         firSymbol: FS,
         dispatchReceiverLookupTag: ConeClassLikeLookupTag?,
-        getCachedIrDeclaration: (F, ConeClassLikeLookupTag?, (F) -> IdSignature?) -> I?,
-        createIrDeclaration: (IrDeclarationParent?, IrDeclarationOrigin) -> I,
-        createIrLazyDeclaration: (IdSignature, Fir2IrLazyClass, IrDeclarationOrigin) -> I,
+        getCachedIrDeclaration: (firDeclaration: F, dispatchReceiverLookupTag: ConeClassLikeLookupTag?, () -> IdSignature?) -> I?,
+        createIrDeclaration: (parent: IrDeclarationParent?, origin: IrDeclarationOrigin) -> I,
+        createIrLazyDeclaration: (signature: IdSignature, lazyOwner: Fir2IrLazyClass, origin: IrDeclarationOrigin) -> I,
     ): IrSymbol {
         val fir = firSymbol.fir as F
         val irParent by lazy { findIrParent(fir) }
