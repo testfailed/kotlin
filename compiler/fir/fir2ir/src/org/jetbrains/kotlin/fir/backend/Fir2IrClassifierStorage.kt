@@ -183,6 +183,7 @@ class Fir2IrClassifierStorage(
         // The last variant is possible for local variables like 'val a = object : Any() { ... }'
         if (processMembersOfClassesOnTheFlyImmediately) {
             processMembersOfClassCreatedOnTheFly(klass, result)
+            converter.bindFakeOverridesInClass(result)
         } else {
             localClassesCreatedOnTheFly[klass] = result
         }
@@ -194,6 +195,8 @@ class Fir2IrClassifierStorage(
         for ((klass, irClass) in localClassesCreatedOnTheFly) {
             processMembersOfClassCreatedOnTheFly(klass, irClass)
         }
+        // Note: it's better to bind everything AFTER members are built, in case local classes are dependent on each other
+        localClassesCreatedOnTheFly.values.forEach(converter::bindFakeOverridesInClass)
         localClassesCreatedOnTheFly.clear()
     }
 
@@ -202,7 +205,6 @@ class Fir2IrClassifierStorage(
             is FirRegularClass -> converter.processClassMembers(klass, irClass)
             is FirAnonymousObject -> converter.processAnonymousObjectMembers(klass, irClass, processHeaders = false)
         }
-        converter.bindFakeOverridesInClass(irClass)
     }
 
     fun processClassHeader(regularClass: FirRegularClass, irClass: IrClass = getCachedIrClass(regularClass)!!): IrClass {
