@@ -16,7 +16,7 @@ import org.jetbrains.kotlin.gradle.utils.COMPILE_ONLY
 import org.jetbrains.kotlin.gradle.utils.IMPLEMENTATION
 import org.jetbrains.kotlin.gradle.utils.RUNTIME_ONLY
 
-internal enum class KotlinDependencyScope(val scopeName: String) {
+enum class KotlinDependencyScope(val scopeName: String) {
     API_SCOPE(API),
     IMPLEMENTATION_SCOPE(IMPLEMENTATION),
     COMPILE_ONLY_SCOPE(COMPILE_ONLY),

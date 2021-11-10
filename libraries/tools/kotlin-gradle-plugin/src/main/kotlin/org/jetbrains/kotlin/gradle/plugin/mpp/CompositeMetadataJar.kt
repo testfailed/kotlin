@@ -11,7 +11,7 @@ import org.jetbrains.kotlin.gradle.utils.listDescendants
 import java.io.File
 import java.util.zip.ZipFile
 
-internal fun CompositeMetadataJar(
+fun CompositeMetadataJar(
     moduleIdentifier: String,
     projectStructureMetadata: KotlinProjectStructureMetadata,
     primaryArtifactFile: File,
@@ -20,7 +20,7 @@ internal fun CompositeMetadataJar(
     moduleIdentifier, projectStructureMetadata, primaryArtifactFile, hostSpecificArtifactsBySourceSet
 )
 
-internal interface CompositeMetadataJar {
+interface CompositeMetadataJar {
     fun getSourceSetCompiledMetadata(
         sourceSetName: String, outputDirectory: File, materializeFile: Boolean
     ): File

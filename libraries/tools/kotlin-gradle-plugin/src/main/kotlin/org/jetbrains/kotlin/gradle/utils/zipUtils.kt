@@ -10,7 +10,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import java.util.zip.ZipOutputStream
 
-internal fun copyZipFilePartially(sourceZipFile: File, destinationZipFile: File, path: String) {
+fun copyZipFilePartially(sourceZipFile: File, destinationZipFile: File, path: String) {
     requireValidZipDirectoryPath(path)
 
     ZipFile(sourceZipFile).use { zip ->
@@ -34,7 +34,7 @@ internal fun copyZipFilePartially(sourceZipFile: File, destinationZipFile: File,
     }
 }
 
-internal fun ZipFile.listDescendants(path: String): Sequence<ZipEntry> {
+fun ZipFile.listDescendants(path: String): Sequence<ZipEntry> {
     requireValidZipDirectoryPath(path)
     return entries().asSequence().filter { entry ->
         entry.name != path && entry.name.startsWith(path)

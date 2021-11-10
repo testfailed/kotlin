@@ -158,7 +158,7 @@ class DefaultKotlinSourceSet(
     fun getAdditionalVisibleSourceSets(): List<KotlinSourceSet> =
         getVisibleSourceSetsFromAssociateCompilations(project, this)
 
-    internal fun getDependenciesTransformation(scope: KotlinDependencyScope): Iterable<MetadataDependencyTransformation> {
+    fun getDependenciesTransformation(scope: KotlinDependencyScope): Iterable<MetadataDependencyTransformation> {
         val metadataDependencyResolutionByModule =
             dependencyTransformations[scope]?.metadataDependencyResolutions
                 ?.associateBy { ModuleIds.fromComponent(project, it.dependency) }
