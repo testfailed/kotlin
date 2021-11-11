@@ -2,3 +2,5 @@ KtFunctionCall:
 argumentMapping = { 1 -> (a: kotlin.Int) }
 targetFunction = ERR<No value passed for parameter 'b', [/C.get(<dispatch receiver>: C, a: kotlin.Int, b: kotlin.String): kotlin.Boolean]>
 substitutor = <empty substitutor>
+dispatchReceiver = <explicit receiver value: c>
+extensionReceiver = null

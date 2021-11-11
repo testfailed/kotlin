@@ -17,6 +17,7 @@ import org.jetbrains.kotlin.analysis.api.fir.symbols.KtFirArrayOfSymbolProvider.
 import org.jetbrains.kotlin.analysis.api.fir.symbols.KtFirArrayOfSymbolProvider.arrayOfSymbol
 import org.jetbrains.kotlin.analysis.api.fir.symbols.KtFirArrayOfSymbolProvider.arrayTypeToArrayOfCall
 import org.jetbrains.kotlin.analysis.api.fir.symbols.KtFirFunctionSymbol
+import org.jetbrains.kotlin.analysis.api.impl.barebone.parentOfType
 import org.jetbrains.kotlin.analysis.api.impl.base.components.AbstractKtCallResolver
 import org.jetbrains.kotlin.analysis.api.symbols.*
 import org.jetbrains.kotlin.analysis.api.symbols.markers.KtSymbolWithMembers
@@ -25,9 +26,12 @@ import org.jetbrains.kotlin.analysis.api.types.KtSubstitutor
 import org.jetbrains.kotlin.analysis.api.withValidityAssertion
 import org.jetbrains.kotlin.analysis.low.level.api.fir.api.getOrBuildFir
 import org.jetbrains.kotlin.diagnostics.KtDiagnostic
+import org.jetbrains.kotlin.fir.declarations.FirCallableDeclaration
 import org.jetbrains.kotlin.fir.declarations.FirConstructor
 import org.jetbrains.kotlin.fir.declarations.FirProperty
 import org.jetbrains.kotlin.fir.expressions.*
+import org.jetbrains.kotlin.fir.expressions.impl.FirNoReceiverExpression
+import org.jetbrains.kotlin.fir.psi
 import org.jetbrains.kotlin.fir.realPsi
 import org.jetbrains.kotlin.fir.references.FirErrorNamedReference
 import org.jetbrains.kotlin.fir.references.FirReference
@@ -36,6 +40,9 @@ import org.jetbrains.kotlin.fir.references.FirSuperReference
 import org.jetbrains.kotlin.fir.references.impl.FirSimpleNamedReference
 import org.jetbrains.kotlin.fir.resolve.calls.FirErrorReferenceWithCandidate
 import org.jetbrains.kotlin.fir.resolve.substitution.substitutorByMap
+import org.jetbrains.kotlin.fir.symbols.SymbolInternals
+import org.jetbrains.kotlin.fir.symbols.impl.FirCallableSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
 import org.jetbrains.kotlin.fir.types.*
@@ -46,6 +53,7 @@ import org.jetbrains.kotlin.psi.psiUtil.findAssignment
 import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 import java.util.concurrent.ConcurrentHashMap
 
+@OptIn(SymbolInternals::class)
 internal class KtFirCallResolver(
     override val analysisSession: KtFirAnalysisSession,
     override val token: ValidityToken,
@@ -62,7 +70,10 @@ internal class KtFirCallResolver(
                 val access =
                     call.readWriteAccessWithFullExpressionWithPossibleResolve(readWriteAccessWithFullExpressionByResolve = { null }).first
 
-                val setterValue = findAssignment(call)?.right
+                val assignmentCall = findAssignment(call)
+                val qualifiedAccess = (call.parentOfType<KtDotQualifiedExpression>()?.getOrBuildFir(firResolveState) as? FirQualifiedAccess)
+                    ?: assignmentCall?.getOrBuildFir(firResolveState) as? FirQualifiedAccess
+                val setterValue = assignmentCall?.right
                 val accessor = when {
                     access.isWrite -> propertySymbol.setterSymbol?.fir
                     access.isRead -> propertySymbol.getterSymbol?.fir
@@ -83,10 +94,24 @@ internal class KtFirCallResolver(
                     val setterParameterSymbol = accessor.valueParameters.single().buildSymbol(firSymbolBuilder) as KtValueParameterSymbol
                     ktArgumentMapping[setterValue] = setterParameterSymbol
                 }
-                return KtFunctionCall(ktArgumentMapping, target, KtSubstitutor.Empty(token), token)
+                return KtFunctionCall(
+                    ktArgumentMapping,
+                    target,
+                    KtSubstitutor.Empty(token),
+                    qualifiedAccess?.dispatchReceiver?.asKtReceiverValue(),
+                    qualifiedAccess?.extensionReceiver?.asKtReceiverValue(),
+                    token
+                )
             }
             is FirPropertyAccessExpression -> {
-                KtFunctionCall(LinkedHashMap(), fir.calleeReference.createCallTarget() ?: return null, KtSubstitutor.Empty(token), token)
+                KtFunctionCall(
+                    LinkedHashMap(),
+                    fir.calleeReference.createCallTarget() ?: return null,
+                    KtSubstitutor.Empty(token),
+                    fir.dispatchReceiver.asKtReceiverValue(),
+                    fir.extensionReceiver.asKtReceiverValue(),
+                    token
+                )
             }
             else -> return null
         }
@@ -155,6 +180,8 @@ internal class KtFirCallResolver(
                             token
                         ),
                         arrayOfCall.createSubstitutorFromTypeArguments(defaultArrayOfSymbol),
+                        null,
+                        null,
                         token
                     )
                 }
@@ -165,8 +192,38 @@ internal class KtFirCallResolver(
             arrayOfCall.createArgumentMapping(arrayOfSymbol),
             KtSuccessCallTarget(arrayOfSymbol, token),
             arrayOfCall.createSubstitutorFromTypeArguments(arrayOfSymbol),
+            null,
+            null,
             token
         )
+    }
+
+    private fun FirExpression.asKtReceiverValue(): KtReceiverValue? {
+        return when (this) {
+            is FirExpressionWithSmartcast -> {
+                val original = originalExpression.asKtReceiverValue()
+                if (isStable && original != null) {
+                    KtSmartCastedReceiverValue(original, smartcastType.coneType.asKtType())
+                } else {
+                    original
+                }
+            }
+            is FirThisReceiverExpression -> {
+                val psi = this.psi
+                if (psi == null) {
+                    val boundKtSymbol = when (val boundSymbol = calleeReference.boundSymbol) {
+                        is FirClassSymbol<*> -> boundSymbol.asKtSymbol()
+                        is FirCallableSymbol -> firSymbolBuilder.callableBuilder.buildExtensionReceiverSymbol(boundSymbol.fir as FirCallableDeclaration)
+                        else -> return null
+                    }
+                    KtImplicitReceiverValue(token, boundKtSymbol ?: return null)
+                } else {
+                    KtExplicitReceiverValue(token, psi as KtExpression)
+                }
+            }
+            is FirNoReceiverExpression -> null
+            else -> KtExplicitReceiverValue(token, psi as KtExpression)
+        }
     }
 
     private fun FirArrayOfCall.createSubstitutorFromTypeArguments(arrayOfSymbol: KtFirFunctionSymbol): KtSubstitutor {
@@ -216,21 +273,41 @@ internal class KtFirCallResolver(
         return if (callableId in kotlinFunctionInvokeCallableIds) {
             // A fake override is always created for a function type with all types substituted properly inside the dispatch receiver. Hence
             // there is no need for additional substitutor.
-            KtFunctionalTypeVariableCall(variableLikeSymbol, createArgumentMapping(), target, KtSubstitutor.Empty(token), token)
+            val variableAccess = dispatchReceiver as? FirQualifiedAccess
+            KtFunctionalTypeVariableCall(
+                variableLikeSymbol,
+                createArgumentMapping(),
+                target,
+                KtSubstitutor.Empty(token),
+                variableAccess?.dispatchReceiver?.asKtReceiverValue(),
+                variableAccess?.extensionReceiver?.asKtReceiverValue(),
+                token
+            )
         } else {
             val substitutor = createSubstitutorFromTypeArguments(functionSymbol)
+            val variableAccess = extensionReceiver as? FirQualifiedAccess
             KtVariableWithInvokeFunctionCall(
                 variableLikeSymbol,
                 createArgumentMapping(),
                 target,
-                substitutor, token
+                substitutor,
+                variableAccess?.dispatchReceiver?.asKtReceiverValue(),
+                variableAccess?.extensionReceiver?.asKtReceiverValue(),
+                token
             )
         }
     }
 
     private fun FirFunctionCall.asSimpleFunctionCall(): KtFunctionCall? {
         val target = this.calleeReference.createCallTarget() ?: return null
-        return KtFunctionCall(createArgumentMapping(), target, createSubstitutorFromTypeArguments() ?: return null, token)
+        return KtFunctionCall(
+            createArgumentMapping(),
+            target,
+            createSubstitutorFromTypeArguments() ?: return null,
+            dispatchReceiver.asKtReceiverValue(),
+            extensionReceiver.asKtReceiverValue(),
+            token
+        )
     }
 
     private fun FirAnnotationCall.asAnnotationCall(): KtAnnotationCall? {

@@ -2,3 +2,5 @@ KtFunctionCall:
 argumentMapping = {  }
 targetFunction = <constructor>(): A
 substitutor = <empty substitutor>
+dispatchReceiver = null
+extensionReceiver = null

@@ -2,3 +2,5 @@ KtFunctionCall:
 argumentMapping = { args -> (vararg a: kotlin.Int) }
 targetFunction = /function(vararg a: kotlin.Int): kotlin.Unit
 substitutor = <empty substitutor>
+dispatchReceiver = null
+extensionReceiver = null

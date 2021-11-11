@@ -2,3 +2,5 @@ KtFunctionCall:
 argumentMapping = {  }
 targetFunction = <getter>(): kotlin.Int
 substitutor = <empty substitutor>
+dispatchReceiver = <implicit receiver value: <extension receiver: A>>
+extensionReceiver = null

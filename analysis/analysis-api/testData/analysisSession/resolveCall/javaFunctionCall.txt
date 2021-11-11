@@ -2,3 +2,5 @@ KtFunctionCall:
 argumentMapping = {  }
 targetFunction = /JavaClass.javaMethod(<dispatch receiver>: JavaClass): kotlin.Unit
 substitutor = <empty substitutor>
+dispatchReceiver = <explicit receiver value: javaClass>
+extensionReceiver = null

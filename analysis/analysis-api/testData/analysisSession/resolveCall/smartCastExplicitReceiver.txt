@@ -2,5 +2,5 @@ KtFunctionCall:
 argumentMapping = {  }
 targetFunction = <getter>(): kotlin.Int
 substitutor = <empty substitutor>
-dispatchReceiver = <explicit receiver value: ktClass>
+dispatchReceiver = <explicit receiver value: a> smartcast to kotlin.String
 extensionReceiver = null

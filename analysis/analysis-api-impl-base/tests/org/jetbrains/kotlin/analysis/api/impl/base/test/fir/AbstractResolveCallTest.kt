@@ -7,10 +7,7 @@ package org.jetbrains.kotlin.analysis.api.impl.base.test.fir
 
 import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.analysis.api.KtAnalysisSession
-import org.jetbrains.kotlin.analysis.api.calls.KtCall
-import org.jetbrains.kotlin.analysis.api.calls.KtDelegatedConstructorCallKind
-import org.jetbrains.kotlin.analysis.api.calls.KtErrorCallTarget
-import org.jetbrains.kotlin.analysis.api.calls.KtSuccessCallTarget
+import org.jetbrains.kotlin.analysis.api.calls.*
 import org.jetbrains.kotlin.analysis.api.impl.barebone.test.FrontendApiTestConfiguratorService
 import org.jetbrains.kotlin.analysis.api.impl.barebone.test.expressionMarkerProvider
 import org.jetbrains.kotlin.analysis.api.impl.base.KtMapBackedSubstitutor
@@ -91,7 +88,9 @@ private fun KtCall.stringRepresentation(): String {
         }
         is KtValueParameterSymbol -> "${if (isVararg) "vararg " else ""}$name: ${annotatedType.type.render()}"
         is KtTypeParameterSymbol -> this.nameOrAnonymous.asString()
+        is KtClassLikeSymbol -> "class ${this.classIdIfNonLocal ?: this.nameOrAnonymous}"
         is KtVariableSymbol -> "${if (isVal) "val" else "var"} $name: ${annotatedType.type.render()}"
+        is KtReceiverParameterSymbol -> "<extension receiver: ${type.type.render()}>"
         is KtSuccessCallTarget -> symbol.stringValue()
         is KtErrorCallTarget -> "ERR<${this.diagnostic.defaultMessage}, [${candidates.joinToString { it.stringValue() }}]>"
         is Boolean -> toString()
@@ -105,6 +104,9 @@ private fun KtCall.stringRepresentation(): String {
             "<map substitutor: $mappingText>"
         }
         is KtSubstitutor -> "<complex substitutor>"
+        is KtExplicitReceiverValue -> "<explicit receiver value: ${expression.text}>"
+        is KtImplicitReceiverValue -> "<implicit receiver value: ${boundSymbol.stringValue()}>"
+        is KtSmartCastedReceiverValue -> "${original.stringValue()} smartcast to ${smartCastType.render()}"
         else -> error("unexpected parameter type ${this::class}")
     }
 

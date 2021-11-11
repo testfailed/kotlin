@@ -409,6 +409,18 @@ public class FirResolveCallTestGenerated extends AbstractFirResolveCallTest {
     }
 
     @Test
+    @TestMetadata("smartCastExplicitReceiver.kt")
+    public void testSmartCastExplicitReceiver() throws Exception {
+        runTest("analysis/analysis-api/testData/analysisSession/resolveCall/smartCastExplicitReceiver.kt");
+    }
+
+    @Test
+    @TestMetadata("smartCastImplicitReceiver.kt")
+    public void testSmartCastImplicitReceiver() throws Exception {
+        runTest("analysis/analysis-api/testData/analysisSession/resolveCall/smartCastImplicitReceiver.kt");
+    }
+
+    @Test
     @TestMetadata("unresolvedSuperReference.kt")
     public void testUnresolvedSuperReference() throws Exception {
         runTest("analysis/analysis-api/testData/analysisSession/resolveCall/unresolvedSuperReference.kt");

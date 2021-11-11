@@ -2,3 +2,5 @@ KtFunctionCall:
 argumentMapping = { 42 -> (i: kotlin.Int) }
 targetFunction = <constructor>(i: kotlin.Int): A
 substitutor = <empty substitutor>
+dispatchReceiver = null
+extensionReceiver = null
