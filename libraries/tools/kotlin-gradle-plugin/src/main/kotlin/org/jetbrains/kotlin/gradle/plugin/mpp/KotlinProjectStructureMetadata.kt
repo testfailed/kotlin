@@ -124,19 +124,19 @@ data class KotlinProjectStructureMetadata(
         get() = sourceSetModuleDependencies.mapValues { (_, ids) -> ids.map { (group, module) -> group.orEmpty() to module }.toSet() }
 
     companion object {
-        internal const val FORMAT_VERSION_0_1 = "0.1"
+        const val FORMAT_VERSION_0_1 = "0.1"
 
         // + binaryFormat (klib, metadata/jar)
-        internal const val FORMAT_VERSION_0_2 = "0.2"
+        const val FORMAT_VERSION_0_2 = "0.2"
 
         // + 'hostSpecific' flag for source sets
-        internal const val FORMAT_VERSION_0_3 = "0.3"
+        const val FORMAT_VERSION_0_3 = "0.3"
 
         // + 'isPublishedInRootModule' top-level flag
-        internal const val FORMAT_VERSION_0_3_1 = "0.3.1"
+        const val FORMAT_VERSION_0_3_1 = "0.3.1"
 
         // + 'sourceSetCInteropMetadataDirectory' map
-        internal const val FORMAT_VERSION_0_3_2 = "0.3.2"
+        const val FORMAT_VERSION_0_3_2 = "0.3.2"
     }
 }
 
@@ -272,7 +272,7 @@ internal fun <Serializer> KotlinProjectStructureMetadata.serialize(
     }
 }
 
-internal fun KotlinProjectStructureMetadata.toXmlDocument(): Document {
+fun KotlinProjectStructureMetadata.toXmlDocument(): Document {
     return DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument().apply {
         val node: Node.(String, Node.() -> Unit) -> Unit = { name, content -> appendChild(createElement(name).apply(content)) }
         val textNode: Node.(String, String) -> Unit =
@@ -281,7 +281,7 @@ internal fun KotlinProjectStructureMetadata.toXmlDocument(): Document {
     }
 }
 
-internal fun KotlinProjectStructureMetadata.toJson(): String {
+fun KotlinProjectStructureMetadata.toJson(): String {
     val gson = GsonBuilder().setPrettyPrinting().create()
     val stringWriter = StringWriter()
     with(gson.newJsonWriter(stringWriter)) {
@@ -300,7 +300,7 @@ internal fun KotlinProjectStructureMetadata.toJson(): String {
 
 private val NodeList.elements: Iterable<Element> get() = (0 until length).map { this@elements.item(it) }.filterIsInstance<Element>()
 
-internal fun parseKotlinSourceSetMetadataFromJson(string: String): KotlinProjectStructureMetadata? {
+fun parseKotlinSourceSetMetadataFromJson(string: String): KotlinProjectStructureMetadata? {
     @Suppress("DEPRECATION") // The replacement doesn't compile against old dependencies such as AS 4.0
     val json = JsonParser().parse(string).asJsonObject
     val valueNamed: JsonObject.(String) -> String? = { name -> get(name)?.asString }
@@ -310,7 +310,7 @@ internal fun parseKotlinSourceSetMetadataFromJson(string: String): KotlinProject
     return parseKotlinSourceSetMetadata({ json.get(ROOT_NODE_NAME).asJsonObject }, valueNamed, multiObjects, multiValues)
 }
 
-internal fun parseKotlinSourceSetMetadataFromXml(document: Document): KotlinProjectStructureMetadata? {
+fun parseKotlinSourceSetMetadataFromXml(document: Document): KotlinProjectStructureMetadata? {
     val nodeNamed: Element.(String) -> Element? = { name -> getElementsByTagName(name).elements.singleOrNull() }
     val valueNamed: Element.(String) -> String? =
         { name -> getElementsByTagName(name).run { if (length > 0) item(0).textContent else null } }
