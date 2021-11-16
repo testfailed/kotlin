@@ -209,9 +209,15 @@ class JsClassGenerator(private val irClass: IrClass, val context: JsGenerationCo
     private fun IrSimpleFunction?.shouldExportAccessor(): Boolean {
         if (this == null) return false
 
-        return overridesExternal() ||
-                parentAsClass.isExported(context.staticContext.backendContext) ||
-                isOverriddenExported(context.staticContext.backendContext)
+        if (parentAsClass.isExported(context.staticContext.backendContext)) return true
+
+        val property = correspondingPropertySymbol!!.owner
+
+        if (property.isOverriddenExported(context.staticContext.backendContext)) {
+            return isOverriddenExported(context.staticContext.backendContext)
+        }
+
+        return overridesExternal() || property.getJsName() != null
     }
 
     private fun IrSimpleFunction.accessorRef(): JsNameRef? =
