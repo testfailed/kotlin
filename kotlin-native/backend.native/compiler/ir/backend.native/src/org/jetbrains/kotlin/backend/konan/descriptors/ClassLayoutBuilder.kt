@@ -260,7 +260,7 @@ internal class GlobalHierarchyAnalysis(val context: Context, val irModule: IrMod
     }
 }
 
-internal class ClassLayoutBuilder(val irClass: IrClass, val context: Context, val isLowered: Boolean) {
+internal class ClassLayoutBuilder(val irClass: IrClass, val context: Context) {
     val vtableEntries: List<OverriddenFunctionInfo> by lazy {
         require(!irClass.isInterface)
 

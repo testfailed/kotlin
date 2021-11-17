@@ -168,11 +168,6 @@ internal val buildAdditionalCacheInfoPhase = konanUnitPhase(
         prerequisite = setOf(psiToIrPhase)
 )
 
-// Coupled with [psiToIrPhase] logic above.
-internal fun shouldLower(context: Context, declaration: IrDeclaration): Boolean {
-    return context.llvmModuleSpecification.containsDeclaration(declaration)
-}
-
 internal val destroySymbolTablePhase = konanUnitPhase(
         op = {
             this.symbolTable = null // TODO: invalidate symbolTable itself.
