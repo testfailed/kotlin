@@ -6,9 +6,11 @@
 package org.jetbrains.kotlin.js.resolve.diagnostics
 
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
+import org.jetbrains.kotlin.builtins.StandardNames
 import org.jetbrains.kotlin.builtins.isFunctionType
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.descriptors.ClassKind.*
+import org.jetbrains.kotlin.js.resolve.diagnostics.JsExportDeclarationChecker.isExportable
 import org.jetbrains.kotlin.js.translate.utils.AnnotationsUtils
 import org.jetbrains.kotlin.psi.KtDeclaration
 import org.jetbrains.kotlin.resolve.BindingContext
@@ -127,8 +129,11 @@ object JsExportDeclarationChecker : DeclarationChecker {
                     return
                 }
 
-                for (superType in descriptor.defaultType.supertypes()) {
-                    if (!superType.isExportable(bindingContext)) {
+                val supertypes = descriptor.defaultType.supertypes()
+                val isEnum = supertypes.any { KotlinBuiltIns.isEnum(it) }
+
+                for (superType in supertypes) {
+                    if (!superType.isExportable(bindingContext) && !(KotlinBuiltIns.isComparable(superType) && isEnum)) {
                         trace.report(ErrorsJs.NON_EXPORTABLE_TYPE.on(declaration, "super", superType))
                     }
                 }
@@ -187,6 +192,8 @@ object JsExportDeclarationChecker : DeclarationChecker {
         val descriptor = constructor.declarationDescriptor
 
         if (descriptor !is MemberDescriptor) return false
+
+        if (KotlinBuiltIns.isEnum(this)) return true
 
         return descriptor.isEffectivelyExternal() || AnnotationsUtils.isExportedObject(descriptor, bindingContext)
     }
