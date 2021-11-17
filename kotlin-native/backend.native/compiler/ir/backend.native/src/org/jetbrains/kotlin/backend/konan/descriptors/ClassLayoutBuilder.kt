@@ -468,7 +468,7 @@ internal class ClassLayoutBuilder(val irClass: IrClass, val context: Context) {
      * Fields declared in the class.
      */
     fun getDeclaredFields(): List<FieldInfo> {
-        val outerThisField = if (irClass.needsOuterThisField())
+        val outerThisField = if (irClass.isInner)
             context.specialDeclarationsFactory.getOuterThisField(irClass)
         else null
         if (context.config.lazyIrForCaches && !context.llvmModuleSpecification.containsDeclaration(irClass)) {

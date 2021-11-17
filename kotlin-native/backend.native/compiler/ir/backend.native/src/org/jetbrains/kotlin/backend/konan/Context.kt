@@ -78,9 +78,6 @@ internal class SpecialDeclarationsFactory(val context: Context) {
 
     fun getOuterThisField(innerClass: IrClass): IrField {
         assert(innerClass.isInner) { "Class is not inner: ${innerClass.render()}" }
-        val superClass = innerClass.getSuperClassNotAny()
-        if (superClass?.isInner == true)
-            return getOuterThisField(superClass)
         return outerThisFields.getOrPut(innerClass) {
             val outerClass = innerClass.parent as? IrClass
                     ?: throw AssertionError("No containing class for inner class ${innerClass.descriptor}")

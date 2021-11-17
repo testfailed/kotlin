@@ -32,7 +32,6 @@ import org.jetbrains.kotlin.backend.konan.descriptors.ClassLayoutBuilder
 import org.jetbrains.kotlin.backend.konan.descriptors.findPackage
 import org.jetbrains.kotlin.backend.konan.descriptors.isInteropLibrary
 import org.jetbrains.kotlin.backend.konan.ir.interop.IrProviderForCEnumAndCStructStubs
-import org.jetbrains.kotlin.backend.konan.ir.needsOuterThisField
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.descriptors.konan.DeserializedKlibModuleOrigin
 import org.jetbrains.kotlin.descriptors.konan.isNativeStdlib
@@ -534,9 +533,6 @@ internal class KonanIrLinker(
                         val irField = field.irField ?: error("No IR for field ${field.name} of ${irClass.render()}")
                         if (it == outerThisIndex) {
                             require(irClass.isInner) { "Expected an inner class: ${irClass.render()}" }
-                            require(irClass.needsOuterThisField()) {
-                                "An inner class ${irClass.render()} doesn't need its own <outer this> field (inherits it from super)"
-                            }
                             require(protoClasses.size > 1) { "An inner class must have at least one outer class" }
                             val outerProtoClass = protoClasses[protoClasses.size - 2]
                             val nameAndType = BinaryNameAndType.decode(outerProtoClass.thisReceiver.nameType)
@@ -824,9 +820,6 @@ internal class KonanIrLinker(
             return serializedClassFields.fields.mapIndexed { index, field ->
                 if (index == serializedClassFields.outerThisIndex) {
                     require(irClass.isInner) { "Expected an inner class: ${irClass.render()}" }
-                    require(irClass.needsOuterThisField()) {
-                        "An inner class ${irClass.render()} doesn't need its own <outer this> field (inherits it from super)"
-                    }
                     require(outerThisField != null) { "For an inner class ${irClass.render()} there should be <outer this> field" }
                     val fieldType = declarationDeserializer.deserializeIrType(field.type)
                     ClassLayoutBuilder.FieldInfo(outerThisField.name.asString(), fieldType, isConst = false, outerThisField)

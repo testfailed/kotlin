@@ -9,7 +9,6 @@ import org.jetbrains.kotlin.backend.common.ClassLoweringPass
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.backend.common.lower.callsSuper
 import org.jetbrains.kotlin.backend.konan.Context
-import org.jetbrains.kotlin.backend.konan.ir.needsOuterThisField
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.IrBlockBody
@@ -124,7 +123,7 @@ internal class InnerClassLowering(val context: Context) : ClassLoweringPass {
         lateinit var outerThisFieldSymbol: IrFieldSymbol
 
         fun lowerInnerClass() {
-            if (!irClass.needsOuterThisField()) return
+            if (!irClass.isInner) return
 
             createOuterThisField()
             lowerConstructors()
