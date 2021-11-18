@@ -31,6 +31,7 @@ import org.jetbrains.kotlin.backend.konan.InlineFunctionOriginInfo
 import org.jetbrains.kotlin.backend.konan.descriptors.ClassLayoutBuilder
 import org.jetbrains.kotlin.backend.konan.descriptors.findPackage
 import org.jetbrains.kotlin.backend.konan.descriptors.isInteropLibrary
+import org.jetbrains.kotlin.backend.konan.descriptors.toFieldInfo
 import org.jetbrains.kotlin.backend.konan.ir.interop.IrProviderForCEnumAndCStructStubs
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.descriptors.konan.DeserializedKlibModuleOrigin
@@ -821,8 +822,7 @@ internal class KonanIrLinker(
                 if (index == serializedClassFields.outerThisIndex) {
                     require(irClass.isInner) { "Expected an inner class: ${irClass.render()}" }
                     require(outerThisField != null) { "For an inner class ${irClass.render()} there should be <outer this> field" }
-                    val fieldType = declarationDeserializer.deserializeIrType(field.type)
-                    ClassLayoutBuilder.FieldInfo(outerThisField.name.asString(), fieldType, isConst = false, outerThisField)
+                    outerThisField.toFieldInfo()
                 } else {
                     val name = fileDeserializationInfo.fileReader.string(field.name)
                     val type = when {
